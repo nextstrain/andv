@@ -1,0 +1,81 @@
+{
+  "title": "Nextclade dataset for Andes hantavirus (ANDV)",
+  "maintainers": [
+    { "name": "the Nextstrain team", "url": "https://nextstrain.org/team" }
+  ],
+  "data_provenance": [
+    {
+      "name": "GenBank",
+      "url": "https://www.ncbi.nlm.nih.gov/genbank/"
+    }
+  ],
+  "build_url": "https://github.com/nextstrain/lassa",
+  "colorings": [
+    {
+      "key": "gt",
+      "title": "Genotype",
+      "type": "categorical"
+    },
+    {
+      "key": "num_date",
+      "title": "Date",
+      "type": "continuous"
+    },
+    {
+      "key": "country",
+      "title": "Country",
+      "type": "categorical"
+    },
+    {
+      "key": "division",
+      "title": "Admin Division",
+      "type": "categorical"
+    },
+    {
+      "key": "host",
+      "title": "Host",
+      "type": "categorical"
+    },
+    {
+      "key": "abbr_authors",
+      "title": "Authors",
+      "type": "categorical"
+    },
+    {
+      "key": "clade_membership",
+      "title": "Clade",
+      "type": "categorical"
+    },
+    {
+      "key": "lineage_name",
+      "title": "Lineage name",
+      "type": "categorical"
+    },
+    { "key": "reference",
+      "title": "Reference",
+      "type": "categorical"
+    }
+  ],
+  "geo_resolutions": [
+    "country"
+  ],
+  "display_defaults": {
+    "map_triplicate": false,
+    "color_by": "clade_membership",
+    "distance_measure": "div"
+  },
+  "filters": [
+    "country",
+    "division",
+    "host",
+    "abbr_authors",
+    "clade_membership",
+    "lineage_name"
+  ],
+  "extensions": {
+    "nextclade": {
+      "clade_node_attrs": [
+        ]
+    }
+  }
+}
