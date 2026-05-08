@@ -88,9 +88,25 @@ rule align:
                       {input.data}
         """
 
+rule mask:
+    input:
+        data = "results/{segment}/aligned.fasta"
+    output:
+        masked_data = "results/{segment}/masked.fasta"
+    params:
+        mask_beginning = lambda w: config["mask_beginning"][w.segment],
+        mask_end = lambda w: config["mask_end"][w.segment]
+    shell:
+        """
+        augur mask --sequences {input.data} \
+                    --mask-from-beginning {params.mask_beginning} \
+                    --mask-from-end {params.mask_end} \
+                    --output {output.masked_data}
+        """
+
 rule tree:
     input:
-        aligned = "results/{segment}/aligned.fasta"
+        aligned = "results/{segment}/masked.fasta"
     output:
         tree = "results/{segment}/tree_raw.nwk"
     shell:

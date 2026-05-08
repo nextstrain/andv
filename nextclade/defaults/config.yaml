@@ -23,6 +23,16 @@ min_length:
   l: 3000
   s: 1000
 
+mask_beginning:
+  m: 51
+  l: 35
+  s: 42
+
+mask_end:
+  m: 200
+  l: 65
+  s: 540
+
 tree:
   method: "iqtree"
 
