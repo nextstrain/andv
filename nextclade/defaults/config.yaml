@@ -50,3 +50,4 @@ traits:
 export:
   auspice_config: "defaults/auspice_config.json"
   description: "../phylogenetic/defaults/description.md"
+

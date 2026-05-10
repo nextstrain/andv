@@ -69,9 +69,9 @@
     "division",
     "host",
     "abbr_authors",
-    "clade_membership",
-    "lineage_name"
+    "clade_membership"
   ],
+  "panels":["tree", "entropy"],
   "extensions": {
     "nextclade": {
       "clade_node_attrs": [
