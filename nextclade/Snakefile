@@ -8,6 +8,8 @@ workdir: workflow.current_basedir
 # Use default configuration values. Override with Snakemake's --configfile/--config options.
 configfile: "defaults/config.yaml"
 
+default_update_message = "Updating Nextclade dataset with latest sequences and metadata from Pathoplexus"
+
 segments = ['m', 'l', 's']
 
 wildcard_constraints:
@@ -180,6 +182,18 @@ rule augment_auspice_config:
         with open(output.config, "w") as f:
             json.dump(config, f, indent=2)
 
+
+# generated changelog by fetching from GitHub raw URL specified in config.yaml, then prepending "## Unreleased" header to the top of the changelog content
+rule generate_changelog:
+    params:
+        changelog_url = lambda w: config["changelog_url"].format(segment=w.segment)
+    output:
+        changelog = "results/{segment}/CHANGELOG.md"
+    shell:
+        """
+        curl -s {params.changelog_url} | cat <(printf "## Unreleased\n\n{default_update_message}\n\n") - > {output.changelog}
+        """
+
 rule export:
     input:
         tree = "results/{segment}/tree.nwk",
@@ -245,7 +259,8 @@ rule example_sequences:
 rule assemble_dataset:
     input:
         tree = "auspice/tree_{segment}.json",
-        example_sequences = "results/{segment}/example_sequences.fasta"
+        example_sequences = "results/{segment}/example_sequences.fasta",
+        changelog = "results/{segment}/CHANGELOG.md"
     output:
         dataset_tree = "datasets/{segment}/tree.json"
     params:
@@ -257,7 +272,7 @@ rule assemble_dataset:
         cp defaults/{wildcards.segment}/annotation.gff {params.dataset_dir}/genome_annotation.gff3
         cp defaults/{wildcards.segment}/reference.fasta {params.dataset_dir}/reference.fasta
         cp defaults/{wildcards.segment}/pathogen.json {params.dataset_dir}/pathogen.json
-        cp defaults/{wildcards.segment}/CHANGELOG.md {params.dataset_dir}/CHANGELOG.md
+        cp {input.changelog} {params.dataset_dir}/CHANGELOG.md
         cp defaults/{wildcards.segment}/README.md {params.dataset_dir}/README.md
 
         """

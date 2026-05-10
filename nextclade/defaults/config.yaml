@@ -7,6 +7,8 @@
 strain_id_field: "accession"
 display_strain_field: "strain"
 
+changelog_url: "https://raw.githubusercontent.com/nextstrain/nextclade_data/refs/heads/master/data/nextstrain/orthohantavirus/andv/{segment}/CHANGELOG.md"
+
 inputs:
   - name: ncbi
     sequences: "https://data.nextstrain.org/files/workflows/lassa/all/sequences.fasta.zst"
