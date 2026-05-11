@@ -131,7 +131,7 @@
     "clade_membership"
   ],
   "metadata_columns": [
-    "strain",
+    "strain"
   ],
   "panels": ["tree", "entropy"],
   "extensions": {
