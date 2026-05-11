@@ -5,11 +5,11 @@
   ],
   "data_provenance": [
     {
-      "name": "GenBank",
-      "url": "https://www.ncbi.nlm.nih.gov/genbank/"
+      "name": "Pathoplexus",
+      "url": "https://pathoplexus.org/"
     }
   ],
-  "build_url": "https://github.com/nextstrain/lassa",
+  "build_url": "https://github.com/nextstrain/andv",
   "colorings": [
     {
       "key": "gt",
@@ -20,6 +20,16 @@
       "key": "num_date",
       "title": "Date",
       "type": "continuous"
+    },
+    {
+      "key": "date",
+      "title": "Collection Date",
+      "type": "categorical"
+    },
+    {
+      "key": "region",
+      "title": "Region",
+      "type": "categorical"
     },
     {
       "key": "country",
@@ -42,26 +52,70 @@
       "type": "categorical"
     },
     {
-      "key": "clade_membership",
-      "title": "Clade",
+      "key": "dataUseTerms",
+      "title": "Data use terms",
       "type": "categorical"
     },
     {
-      "key": "lineage_name",
-      "title": "Lineage name",
+      "key": "restrictedUntil",
+      "title": "Restricted Until",
       "type": "categorical"
     },
-    { "key": "reference",
+    {
+      "key": "date_released",
+      "title": "Release Date",
+      "type": "categorical"
+    },
+    {
+      "key": "submission_database",
+      "title": "Database of original submission",
+      "type": "categorical"
+    },
+    {
+      "key": "Pathoplexus_group",
+      "title": "Pathoplexus Group",
+      "type": "categorical"
+    },
+    {
+      "key": "length",
+      "title": "Length",
+      "type": "continuous"
+    },
+    {
+      "key": "insdcAccession",
+      "title": "INSDC Accession",
+      "type": "categorical"
+    },
+    {
+      "key": "institution",
+      "title": "Author Affiliations",
+      "type": "categorical"
+    },
+    {
+      "key": "totalAmbiguousNucs",
+      "title": "Ambiguous Nucleotides",
+      "type": "continuous"
+    },
+    {
+      "key": "totalInsertions",
+      "title": "Insertions",
+      "type": "continuous"
+    },
+    {
+      "key": "totalDeletions",
+      "title": "Deletions",
+      "type": "continuous"
+    },
+    {
+      "key": "reference",
       "title": "Reference",
       "type": "categorical"
     }
   ],
-  "geo_resolutions": [
-    "country"
-  ],
+  "geo_resolutions": ["country"],
   "display_defaults": {
     "map_triplicate": false,
-    "color_by": "clade_membership",
+    "color_by": "host",
     "distance_measure": "div"
   },
   "filters": [
@@ -71,11 +125,16 @@
     "abbr_authors",
     "clade_membership"
   ],
-  "panels":["tree", "entropy"],
+  "metadata_columns": [
+    "strain",
+    "PPX_accession",
+    "INSDC_accession_version",
+    "restrictedUntil"
+  ],
+  "panels": ["tree", "entropy"],
   "extensions": {
     "nextclade": {
-      "clade_node_attrs": [
-        ]
+      "clade_node_attrs": []
     }
   }
 }

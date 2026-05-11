@@ -212,7 +212,6 @@ rule export:
                     --metadata {input.metadata} \
                     --metadata-id-columns accession \
                     --auspice-config {input.auspice_config} \
-                    --color-by-metadata country region \
                     --node-data {input.ancestral_seqs} \
                     --include-root-sequence-inline \
                     --output {output.auspice_tree} \
