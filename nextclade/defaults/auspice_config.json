@@ -136,7 +136,14 @@
   "panels": ["tree", "entropy"],
   "extensions": {
     "nextclade": {
-      "clade_node_attrs": []
+      "clade_node_attrs": [
+        {
+          "name": "outbreak",
+          "displayName": "Outbreak",
+          "description": "Annotation of recent outbreaks (to be refined)",
+          "skipAsReference": false
+        }
+      ]
     }
   }
 }
