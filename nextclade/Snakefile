@@ -136,7 +136,7 @@ rule refine:
         """
 
 
-cds = {"m": ["Gn", "Gc"], "l": ["RdRp"], "s": ["N", "NSs"]}
+cds = {"m": ["Gn", "Gc", "GPC"], "l": ["RdRp"], "s": ["N", "NSs"]}
 
 
 rule ancestral:
