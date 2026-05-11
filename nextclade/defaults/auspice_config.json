@@ -82,8 +82,13 @@
       "type": "continuous"
     },
     {
-      "key": "insdcAccession",
+      "key": "INSDC_accession",
       "title": "INSDC Accession",
+      "type": "categorical"
+    },
+    {
+      "key": "PPX_accession",
+      "title": "Pathoplexus Accession",
       "type": "categorical"
     },
     {
@@ -127,9 +132,6 @@
   ],
   "metadata_columns": [
     "strain",
-    "PPX_accession",
-    "INSDC_accession_version",
-    "restrictedUntil"
   ],
   "panels": ["tree", "entropy"],
   "extensions": {
