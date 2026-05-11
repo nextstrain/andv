@@ -3,6 +3,9 @@ This is the main ingest Snakefile that orchestrates the full ingest workflow
 and defines its default outputs.
 """
 
+segments = ["L", "M", "S"]
+kind = ["", "_open", "_restricted"]
+
 
 # The workflow filepaths are written relative to this Snakefile's base directory
 workdir: workflow.current_basedir
@@ -21,8 +24,12 @@ configfile: "defaults/config.yaml"
 # TODO: Add link to centralized docs on standard Nextstrain metadata fields
 rule all:
     input:
-        sequences=expand("results/{segment}/sequences.fasta", segment=segments),
-        metadata=expand("results/{segment}/metadata.tsv", segment=segments),
+        sequences=expand(
+            "results/{segment}/sequences{kind}.fasta", segment=segments, kind=kind
+        ),
+        metadata=expand(
+            "results/{segment}/metadata{kind}.tsv", segment=segments, kind=kind
+        ),
 
 
 # Note that only PATHOGEN-level customizations should be added to these
