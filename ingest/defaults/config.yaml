@@ -4,31 +4,15 @@
 # Define optional config parameters with their default values here so that users
 # do not have to dig through the workflows to figure out the default values
 
-# Required to fetch from NCBI Datasets
-ncbi_taxon_id: "1980456"
-
-# The list of NCBI Datasets fields to include from NCBI Datasets output
-# These need to be the "mnemonics" of the NCBI Datasets fields, see docs for full list of fields
-# https://www.ncbi.nlm.nih.gov/datasets/docs/v2/reference-docs/command-line/dataformat/tsv/dataformat_tsv_virus-genome/#fields
-# Note: the "accession" field MUST be provided to match with the sequences
-ncbi_datasets_fields:
-  - accession
-  - sourcedb
-  - sra-accs
-  - isolate-lineage
-  - geo-region
-  - geo-location
-  - isolate-collection-date
-  - release-date
-  - update-date
-  - length
-  - host-name
-  - is-lab-host
-  - isolate-lineage-source
-  - biosample-acc
-  - submitter-names
-  - submitter-affiliation
-  - submitter-country
+ppx_fetch:
+  seqs:
+    L: https://lapis.pathoplexus.org/andv/sample/unalignedNucleotideSequences?segments=L&versionStatus=LATEST_VERSION&isRevocation=false
+    M: https://lapis.pathoplexus.org/andv/sample/unalignedNucleotideSequences?segments=M&versionStatus=LATEST_VERSION&isRevocation=false
+    S: https://lapis.pathoplexus.org/andv/sample/unalignedNucleotideSequences?segments=S&versionStatus=LATEST_VERSION&isRevocation=false
+  meta:
+    L: https://lapis.pathoplexus.org/andv/sample/details?dataFormat=csv&versionStatus=LATEST_VERSION&length_LFrom=1
+    M: https://lapis.pathoplexus.org/andv/sample/details?dataFormat=csv&versionStatus=LATEST_VERSION&length_MFrom=1
+    S: https://lapis.pathoplexus.org/andv/sample/details?dataFormat=csv&versionStatus=LATEST_VERSION&length_SFrom=1
 
 # Config parameters related to the curate pipeline
 curate:
@@ -57,13 +41,28 @@ curate:
     submitter-names: authors
     submitter-affiliation: institution
     submitter-country: submitter_country
+  ppx_field_map:
+    sampleCollectionDate: date
+    specimenCollectorSampleId: strain
+    displayName: pathoplexus_strain
+    earliestReleaseDate: date_released
+    accessionVersion: PPX_accession
+    insdcAccessionFull: INSDC_accession
+    geoLocCountry: country
+    geoLocAdmin1: division
+    geoLocAdmin2: location
+    hostNameCommon: host
+    insdcRawReadsAccession: sra_accession
+    dataUseTermsRestrictedUntil: restrictedUntil
+    dataUseTermsUrl: dataUseTerms__url
+    authorAffiliations: institution
   # Standardized strain name regex
   # Currently accepts any characters because we do not have a clear standard for strain names across pathogens
   strain_regex: "^.+$"
   # Back up strain name field to use if "strain" doesn"t match regex above
   strain_backup_fields: ["isolate", "accession"]
   # List of date fields to standardize to ISO format YYYY-MM-DD
-  date_fields: ["date", "date_released", "date_updated"]
+  date_fields: ["date", "date_released", "restrictedUntil"]
   # The expected field that contains the GenBank geo_loc_name
   genbank_location_field: location
   # List of expected date formats that are present in the date fields provided above
@@ -118,36 +117,3 @@ curate:
     "institution",
     "segment_genbank",
   ]
-
-# Nextclade parameters to include if you are running Nextclade as a part of your ingest workflow
-# Note that this requires a Nextclade dataset to already exist for your pathogen.
-nextclade_segment:
-  # For separating out L and S records
-  segment_reference: "../nextclade/defaults/{segment}/reference.fasta"
-  min_seed_cover: 0.01
-
-nextclade:
-  # The name of the Nextclade dataset to use for running nextclade.
-  # Run `nextclade dataset list` to get a full list of available Nextclade datasets
-  dataset_name: ["m", "l", "s"]
-  # The first column should be the original column name of the Nextclade TSV
-  # The second column should be the new column name to use in the final metadata TSV
-  # Nextclade can have pathogen specific output columns so make sure to check which
-  # columns would be useful for your downstream phylogenetic analysis.
-  m:
-    field_map:
-      seqName: "accession" # ID field used to merge annotations
-      clade: "m_lineage"
-  l:
-    field_map:
-      seqName: "accession" # ID field used to merge annotations
-      clade: "l_lineage"
-  s:
-    field_map:
-      seqName: "accession" # ID field used to merge annotations
-      clade: "s_lineage"
-  # This is the ID field you would use to match the Nextclade output with the record metadata.
-  # This should be the new name that you have defined in your field map.
-  id_field: "seqName"
-
-sublineage_metadata: "defaults/sublineage_metadata.tsv"

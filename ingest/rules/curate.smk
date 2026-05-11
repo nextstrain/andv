@@ -29,23 +29,19 @@ def format_field_map(field_map: dict[str, str]) -> str:
 # separate files: a metadata TSV and a sequences FASTA.
 rule curate:
     input:
-        sequences_ndjson="data/ncbi.ndjson",
+        sequences_ndjson="data/{segment}/ppx.ndjson",
         geolocation_rules=config["curate"]["local_geolocation_rules"],
         annotations=config["curate"]["annotations"],
     output:
-        metadata="data/all_metadata.tsv",
-        sequences="results/all/sequences.fasta",
-    log:
-        "logs/curate.txt",
-    benchmark:
-        "benchmarks/curate.txt"
+        metadata="results/{segment}/metadata.tsv",
+        sequences="results/{segment}/sequences.fasta",
     params:
-        field_map=format_field_map(config["curate"]["field_map"]),
+        field_map=format_field_map(config["curate"]["ppx_field_map"]),
         strain_regex=config["curate"]["strain_regex"],
         strain_backup_fields=config["curate"]["strain_backup_fields"],
         date_fields=config["curate"]["date_fields"],
-        genbank_location_field=config["curate"]["genbank_location_field"],
         expected_date_formats=config["curate"]["expected_date_formats"],
+        genbank_location_field=config["curate"]["genbank_location_field"],
         articles=config["curate"]["titlecase"]["articles"],
         abbreviations=config["curate"]["titlecase"]["abbreviations"],
         titlecase_fields=config["curate"]["titlecase"]["fields"],
@@ -57,55 +53,59 @@ rule curate:
         sequence_field=config["curate"]["output_sequence_field"],
     shell:
         r"""
-        exec &> >(tee {log:q})
-
         cat {input.sequences_ndjson:q} \
             | augur curate rename \
                 --field-map {params.field_map} \
             | augur curate normalize-strings \
             | augur curate transform-strain-name \
-                --strain-regex {params.strain_regex} \
-                --backup-fields {params.strain_backup_fields} \
+                --strain-regex {params.strain_regex:q} \
+                --backup-fields {params.strain_backup_fields:q} \
             | augur curate format-dates \
-                --date-fields {params.date_fields} \
-                --expected-date-formats {params.expected_date_formats} \
-            | augur curate parse-genbank-location \
-                --location-field {params.genbank_location_field} \
+                --date-fields {params.date_fields:q} \
+                --expected-date-formats {params.expected_date_formats:q} \
             | augur curate titlecase \
-                --titlecase-fields {params.titlecase_fields} \
-                --articles {params.articles} \
-                --abbreviations {params.abbreviations} \
+                --titlecase-fields {params.titlecase_fields:q} \
+                --articles {params.articles:q} \
+                --abbreviations {params.abbreviations:q} \
             | augur curate abbreviate-authors \
-                --authors-field {params.authors_field} \
-                --default-value {params.authors_default_value} \
-                --abbr-authors-field {params.abbr_authors_field} \
+                --authors-field {params.authors_field:q} \
+                --default-value {params.authors_default_value:q} \
+                --abbr-authors-field {params.abbr_authors_field:q} \
             | augur curate apply-geolocation-rules \
-                --geolocation-rules {input.geolocation_rules} \
+                --geolocation-rules {input.geolocation_rules:q} \
+            | python {workflow.basedir}/bin/curate-urls.py \
             | augur curate apply-record-annotations \
-                --annotations {input.annotations} \
-                --id-field {params.annotations_id} \
+                --annotations {input.annotations:q} \
+                --id-field {params.annotations_id:q} \
                 --output-metadata {output.metadata:q} \
                 --output-fasta {output.sequences:q} \
-                --output-id-field {params.id_field} \
-                --output-seq-field {params.sequence_field}
+                --output-id-field {params.id_field:q} \
+                --output-seq-field {params.sequence_field:q}
         """
 
 
-rule subset_metadata:
+rule extract_ppx_data:
     input:
-        metadata="data/all_metadata.tsv",
+        metadata="results/{segment}/metadata.tsv",
+        sequences="results/{segment}/sequences.fasta",
     output:
-        metadata="data/subset_metadata.tsv",
-    log:
-        "logs/subset_metadata.txt",
-    benchmark:
-        "benchmarks/subset_metadata.txt"
+        metadata="results/{segment}/metadata_{ppx_dut}.tsv",
+        sequences="results/{segment}/sequences_{ppx_dut}.fasta",
+    wildcard_constraints:
+        ppx_dut="open|restricted",
     params:
-        metadata_fields=",".join(config["curate"]["metadata_columns"]),
+        ppx_dut=lambda w: w.ppx_dut.upper(),
+        # Warn on empty output for restricted since it's feasible that
+        # none of the data is restricted
+        empty_output=lambda w: "warn" if w.ppx_dut == "restricted" else "error",
     shell:
-        r"""
-        exec &> >(tee {log:q})
-
-        tsv-select -H -f {params.metadata_fields} \
-            {input.metadata:q} > {output.metadata:q}
+        """
+        augur filter --metadata {input.metadata} \
+                     --sequences {input.sequences} \
+                     --metadata-id-columns accession \
+                     --exclude-all \
+                     --include-where "dataUseTerms={params.ppx_dut:q}" \
+                     --output-metadata {output.metadata} \
+                     --output-sequences {output.sequences} \
+                     --empty-output-reporting {params.empty_output:q}
         """
