@@ -120,7 +120,7 @@
   "geo_resolutions": ["country"],
   "display_defaults": {
     "map_triplicate": false,
-    "color_by": "host",
+    "color_by": "outbreak",
     "distance_measure": "div"
   },
   "filters": [

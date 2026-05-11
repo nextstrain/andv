@@ -160,7 +160,21 @@ rule ancestral:
                        --output-node-data {output.ancestral_seqs}
         """
 
-
+rule clades:
+    input:
+        tree="results/{segment}/tree.nwk",
+        clades="defaults/{segment}/clades.tsv",
+        mutations="results/{segment}/muts.json",
+    output:
+        clades="results/{segment}/clades.json",
+    shell:
+        """
+        augur clades --tree {input.tree} \
+                    --clades {input.clades} \
+                    --mutations {input.mutations} \
+                    --membership-name outbreak --label-name outbreak \
+                    --output-node-data {output.clades}
+        """
 rule augment_auspice_config:
     input:
         config="defaults/auspice_config.json",
@@ -204,6 +218,7 @@ rule export:
         metadata="results/{segment}/metadata.tsv",
         ancestral_seqs="results/{segment}/muts.json",
         auspice_config="results/{segment}/auspice_config.json",
+        clades="results/{segment}/clades.json",
     output:
         auspice_tree="results/{segment}/tree.json",
     shell:
@@ -212,7 +227,7 @@ rule export:
                     --metadata {input.metadata} \
                     --metadata-id-columns accession \
                     --auspice-config {input.auspice_config} \
-                    --node-data {input.ancestral_seqs} \
+                    --node-data {input.ancestral_seqs} {input.clades} \
                     --include-root-sequence-inline \
                     --output {output.auspice_tree} \
         """
