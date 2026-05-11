@@ -48,7 +48,7 @@ FEATURES             Location/Qualifiers
      CDS             52..3468
                      /Name="GPC"
                      /gbkey="CDS"
-                     /locus_tag="Gn"
+                     /locus_tag="GPC"
      CDS             52..2004
                      /Name="Gn"
                      /gbkey="CDS"
