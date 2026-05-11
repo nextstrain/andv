@@ -56,10 +56,10 @@ FEATURES             Location/Qualifiers
      CDS             122..313
                      /ID="cds-YP_004928151.1"
                      /Dbxref="GenBank:YP_004928151.1,GeneID:11293630"
-                     /Name="pNP"
+                     /Name="NSs"
                      /gbkey="CDS"
                      /locus_tag="NSs"
-                     /product="putative nonstructural protein"
+                     /product="NSs"
                      /protein_id="YP_004928151.1"
 ORIGIN
         1 tagtagtaga ctccttgaga agctactgct gcgaaagctg gaatgagcac cctccaagaa

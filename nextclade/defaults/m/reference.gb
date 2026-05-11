@@ -45,13 +45,17 @@ FEATURES             Location/Qualifiers
                      /strain="Chile-9717869"
                      /db_xref="taxon:1980456"
                      /segment="M"
-     CDS             52..2004
-                     /Name="G1"
+     CDS             52..3468
+                     /Name="GPC"
                      /gbkey="CDS"
-                     /locus_tag="G1"
+                     /locus_tag="Gn"
+     CDS             52..2004
+                     /Name="Gn"
+                     /gbkey="CDS"
+                     /locus_tag="Gn"
      CDS             2005..3468
-                     /Name="G2"
-                     /locus_tag="G2"
+                     /Name="Gc"
+                     /locus_tag="Gc"
 ORIGIN
         1 tagtagtaga ctccgcaaga agaagcaaaa aattaaagaa gtgagtttaa aatggaaggg
        61 tggtatctgg ttgttcttgg agtctgctat acgctgacac tggcaatgcc caagaccatt
