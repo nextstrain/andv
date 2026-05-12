@@ -175,10 +175,24 @@ rule clades:
                     --membership-name outbreak --label-name outbreak \
                     --output-node-data {output.clades}
         """
+
+rule custom_temporal_color_scale:
+    input:
+        metadata="results/{segment}/metadata.tsv",
+    output:
+        json="results/{segment}/temporal-colors.json",
+    shell:
+        r"""
+        python scripts/temporal-colors.py \
+            --metadata {input.metadata} \
+            --output {output.json}
+        """
+
 rule augment_auspice_config:
     input:
         config="defaults/auspice_config.json",
         extra_config="defaults/{segment}/auspice_extension.json",
+        temporal="results/{segment}/temporal-colors.json",
     output:
         config="results/{segment}/auspice_config.json",
     run:
@@ -196,6 +210,12 @@ rule augment_auspice_config:
         config["extensions"]["nextclade"].update(extra_config)
         config["title"] = f"Andes Virus {wildcards.segment.upper()} Segment (ANDV)"
 
+        # replace the placeholder 'date' coloring with bespoke scale:
+        with open(input.temporal) as f:
+            custom_temporal_coloring = json.load(f)
+        date_idx = [idx for idx,c in enumerate(config['colorings']) if c['key']=='date'][0]
+        config['colorings'][date_idx] = custom_temporal_coloring
+        
         with open(output.config, "w") as f:
             json.dump(config, f, indent=2)
 

@@ -17,13 +17,8 @@
       "type": "categorical"
     },
     {
-      "key": "num_date",
-      "title": "Date",
-      "type": "continuous"
-    },
-    {
       "key": "date",
-      "title": "Collection Date",
+      "title": "THIS ENTRY WILL BE OVERWRITTEN BY SNAKEMAKE",
       "type": "categorical"
     },
     {
